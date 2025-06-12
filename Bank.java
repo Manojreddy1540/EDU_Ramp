@@ -1,8 +1,8 @@
 abstract class BankAccount {
     private static int accountCounter = 1000;
-    private int accountNumber;
-    private String accountHolderName;
-    private String mobileNumber;
+    private final int accountNumber;
+    private final String accountHolderName;
+    private final String mobileNumber;
     protected double balance;
     private boolean isActive;
 
@@ -14,16 +14,12 @@ abstract class BankAccount {
         this.isActive = false;
     }
 
-    public abstract void openAccount();
-    public abstract double calculateInterest();
-    public abstract void withdraw(double amount);
-
     protected void activateAccount() {
         this.isActive = true;
     }
 
     public boolean isActive() {
-        return this.isActive;
+        return !this.isActive;
     }
 
     public void displayAccountDetails() {
@@ -43,7 +39,6 @@ class SavingAccount extends BankAccount {
         super(name, mobile, deposit);
     }
 
-    @Override
     public void openAccount() {
         if (balance >= 1000) {
             activateAccount();
@@ -53,16 +48,13 @@ class SavingAccount extends BankAccount {
         }
     }
 
-    @Override
-    public double calculateInterest() {
+    public void calculateInterest() {
         double interest = balance * INTEREST_RATE;
         System.out.println("Annual Interest: ₹" + interest);
-        return interest;
     }
 
-    @Override
     public void withdraw(double amount) {
-        if (!isActive()) {
+        if (isActive()) {
             System.out.println("Account is not active.");
             return;
         }
@@ -81,16 +73,13 @@ class SavingAccount extends BankAccount {
 }
 
 class CurrentAccount extends BankAccount {
-    private boolean isBusiness;
     private static final double MIN_BALANCE = 2000;
     private static final double PENALTY = 500;
 
-    public CurrentAccount(String name, String mobile, double deposit, boolean isBusiness) {
+    public CurrentAccount(String name, String mobile, double deposit) {
         super(name, mobile, deposit);
-        this.isBusiness = isBusiness;
     }
 
-    @Override
     public void openAccount() {
         if (balance >= 5000) {
             activateAccount();
@@ -100,15 +89,12 @@ class CurrentAccount extends BankAccount {
         }
     }
 
-    @Override
-    public double calculateInterest() {
+    public void calculateInterest() {
         System.out.println("No interest for Current Account.");
-        return 0;
     }
 
-    @Override
     public void withdraw(double amount) {
-        if (!isActive()) {
+        if (isActive()) {
             System.out.println("Account is not active.");
             return;
         }
@@ -136,10 +122,10 @@ public class BankSystem {
         sa.withdraw(200);
         sa.withdraw(300);
         sa.withdraw(400);
-        sa.withdraw(100); 
+        sa.withdraw(100);
 
         System.out.println("\n=== Current Account ===");
-        CurrentAccount ca = new CurrentAccount("ABC Pvt Ltd", "9123456780", 6000, true);
+        CurrentAccount ca = new CurrentAccount("ABC Pvt Ltd", "9123456780", 6000);
         ca.openAccount();
         ca.displayAccountDetails();
         ca.calculateInterest();
@@ -147,3 +133,9 @@ public class BankSystem {
         ca.withdraw(1000);
     }
 }
+
+
+
+
+
+ 
